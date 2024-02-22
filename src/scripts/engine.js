@@ -5,7 +5,7 @@ const state = {
         computerScore: 0,
         scoreBox: document.getElementById("score_points"),
     },
-    // Serao as imagens das cartas
+    // Serão as imagens das cartas
     cardSprites: {
         avatar: document.getElementById("card-image"),
         name: document.getElementById("card-name"),
@@ -20,6 +20,10 @@ const state = {
     },
 };
 
+const playerSides = {
+    player1: "player-field-card",
+    computer: "computer-field-card",
+}
 const pathImages = ".src/assets/icons/"; // é o camimho basico da imagem
 
 // Acrescentar mais cartas depois aqui
@@ -50,8 +54,49 @@ const cardData = [
     }
 ];
 
-// Vai ser a primeira função a ser executado, pois é o estado inicial do jogo.
+async function getRandomCardsId() {
+    const randomIndex = Math.floor(Math.random() * cardData.length);
+    return cardData[randomIndex].id;
+}
+
+async function createCardImage(IdCard, fieldSide) {
+    const cardImage = document.createElement("img"); // para criar um elemento dinamicamente
+    cardImage.setAttribute("height", "100px");    
+    cardImage.setAttribute("src", ".src/assets/icons/card-back.png");
+    cardImage.setAttribute("data-id",IdCard);
+    cardImage.classList.add("card"); // essa classe "card" será implementado no CSS "main.css"
+
+    if(fieldSide === playerSides.player1) {
+        // será o evento que vai ficar escutando
+        cardImage.addEventListener("click", () => {
+            setCardsField(cardImage.getAttribute("data-id"))
+
+        }); 
+    }
+
+    cardImage.addEventListener("mouseover", () => {
+        drawSelectCard(IdCard);
+    });
+
+    return cardImage;
+
+}
+
+// Função que vai sortear as cartas
+async function drawCards(cardNumbers, fieldSide) {
+    for(let i = 0; i < cardNumbers; i++) {
+        const randomIdCard = await getRandomCardsId();
+        const cardImage = await createCardImage(randomIdCard, fieldSide);
+
+        document.getElementById(fieldSide)
+    }
+
+}
+
+// Vai ser a primeira função a ser executada, pois é o estado inicial do jogo.
 function init() {
+    drawCards(5, playerSides.player1);
+    drawCards(5, playerSides.computer);
 
 }
 
